@@ -1,0 +1,55 @@
+# Flutter 프로젝트 구조 및 주요 개념 정리
+##  Ht Reload (핫 리로드)
+- **핫 리로드**는 수정한 코드를 앱에 즉시 반영하는 기능입니다.
+- 앱이 실행 중일 때 **저장(Ctrl+S)** 하면 변경사항이 바로 반영됩니다.
+
+---
+
+##  프로젝트 디렉토리 설명
+
+| 디렉토리 | 설명 |
+|----------|------|
+| `.idea/` | 개발 도구에 필요한 설정 (예: Android Studio) |
+| `.android/` | 안드로이드 네이티브 코드 경로 |
+| `build/` | 빌드 시 생성되는 파일들이 저장되는 디렉토리 |
+| `ios/` | iOS 네이티브 코드 경로 |
+| `lib/` | **Dart 코드 작성** 경로 (메인 앱 로직 포함) |
+| `test/` | 테스트 코드 작성 경로 |
+
+---
+
+##  주요 파일 설명
+
+| 파일명 | 설명 |
+|--------|------|
+| `.gitignore` | Git에서 무시할 파일 규칙을 작성 |
+| `.metadata` | Flutter 프로젝트 메타 정보 관리 파일 |
+| `.packages` | 프로젝트에 사용 중인 패키지 목록 정보 |
+| `flutter_app.iml` | 개발 도구 설정 파일 |
+| `pubspec.lock` | 설치된 패키지의 정확한 버전 정보 관리 |
+| `pubspec.yaml` | 의존성 패키지, 리소스, 프로젝트 설정 파일 |
+| `README.md` | 프로젝트 설명 문서 작성용 파일 |
+
+---
+
+##  주요 클래스
+
+### StatelessWidget
+- 상태가 **변하지 않는 위젯**을 만들 때 사용
+- 예: 단순 UI, 버튼, 텍스트 출력 등
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Text('Hello, Flutter!');
+  }
+}
+MaterialApp
+Flutter 앱의 전반적인 구조를 정의하는 클래스
+
+테마, 라우팅, 다국어 설정 등을 관리
+
+void main() => runApp(MaterialApp(
+  home: MyHomePage(),
+));
