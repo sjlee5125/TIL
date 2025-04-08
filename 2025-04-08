@@ -1,0 +1,182 @@
+# Flutter 예제 코드 통합 정리 (주석 포함)
+
+---
+
+```dart
+import 'package:flutter/material.dart';
+
+// 앱 시작점
+void main() {
+  runApp(const MyApp());
+}
+
+// 공통 앱 구조 정의
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      // 아래 코드 중 어떤 걸 테스트할지 home에 설정
+      // 예: home: FirstPage(), 또는 home: MyHomePage(title: '제목')
+      home: FirstPage(), // 첫 번째 예제(Hero 애니메이션)를 테스트
+    );
+  }
+}
+
+//////////////////////////////////////////////////////////
+// 예제 1: Hero 애니메이션을 활용한 화면 전환
+//////////////////////////////////////////////////////////
+
+class FirstPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('FirstPage')),
+      body: Center(
+        // 이미지 클릭 시 SecondPage로 이동
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SecondPage()),
+            );
+          },
+          // Hero 애니메이션: 두 페이지 간 이미지 자연스럽게 전환
+          child: Hero(
+            tag: 'image', // 동일한 태그 사용 시 Hero 애니메이션 작동
+            child: Image.asset('assets/dog.png'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('SecondPage')),
+      body: Center(
+        // 동일한 Hero 태그로 이어지는 이미지
+        child: Hero(
+          tag: 'image',
+          child: Image.asset('assets/dog.png'),
+        ),
+      ),
+    );
+  }
+}
+
+//////////////////////////////////////////////////////////
+// 예제 2: AlertDialog 다이얼로그 표시 예제
+//////////////////////////////////////////////////////////
+
+class AlertDialogExample extends StatefulWidget {
+  const AlertDialogExample({super.key, required this.title});
+  final String title;
+
+  @override
+  State<AlertDialogExample> createState() => _AlertDialogExampleState();
+}
+
+class _AlertDialogExampleState extends State<AlertDialogExample> {
+  // 버튼 클릭 시 다이얼로그 띄우기
+  void _showAlertDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // 바깥 클릭으로 닫히지 않게
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('제목'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Alert dialog입니다'),
+                Text('ok를 눌러 닫습니다'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ok'),
+              onPressed: () {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+              },
+            ),
+            TextButton(
+              child: const Text('cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title)),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: _showAlertDialog,
+          child: const Text('Dialog 열기'),
+        ),
+      ),
+    );
+  }
+}
+
+//////////////////////////////////////////////////////////
+// 예제 3: DropdownButton을 이용한 드롭다운 메뉴
+//////////////////////////////////////////////////////////
+
+class DropdownExample extends StatefulWidget {
+  const DropdownExample({super.key, required this.title});
+  final String title;
+
+  @override
+  State<DropdownExample> createState() => _DropdownExampleState();
+}
+
+class _DropdownExampleState extends State<DropdownExample> {
+  // 드롭다운 리스트 및 선택 값
+  final _valueList = ['첫번째', '두번째', '세번째'];
+  String _selectedValue = '첫번째'; // 초기 선택값
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title)),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // 가운데 정렬
+          children: [
+            DropdownButton(
+              value: _selectedValue,
+              items: _valueList.map((value) {
+                return DropdownMenuItem(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedValue = value!; // 선택값 변경
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
