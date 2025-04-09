@@ -1,0 +1,131 @@
+
+# R 기초 데이터 분석 및 함수 활용 정리
+
+# 📁 작업 디렉토리 설정 및 환경 초기화
+setwd("C:/r_workdata")  # 원하는 폴더 경로 설정
+Sys.setlocale("LC_ALL", "")  # 로케일 설정
+
+# 📦 라이브러리 불러오기
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+
+# 🔧 자주 사용되는 기본 함수 정리
+# aggregate(): 다양한 함수를 적용해 요약 계산
+# apply(): 행/열 단위로 함수 적용
+# cor(): 상관계수 계산
+# cumsum(): 누적합
+# cumprod(): 누적곱
+# diff(): 차이 계산
+# length(): 요소 개수
+# max(): 최대값
+# min(): 최소값
+# mean(): 평균
+# median(): 중앙값
+# order(): 정렬 순서 반환
+# prod(): 곱 계산
+# range(): 범위 반환
+# rank(): 순위 반환
+# sd(): 표준편차
+# rev(): 역순 정렬
+# sort(): 정렬
+# summary(): 요약 통계
+# sweep(): 행/열 단위 일괄 연산
+# tapply(): 벡터에 그룹별 함수 적용
+# var(): 분산 계산
+
+# 📊 기본 벡터 연산
+v1 = c(1,2,3,4,5)
+v2 = c('a','b','c','d','e')
+max(v1)
+max(v2)
+mean(v1)
+# mean(v2) # 문자에 대해 평균 불가
+sd(v1)
+sum(v1)
+var(v1)
+
+# 🌐 googleVis 사용 예시
+install.packages("googleVis")
+library(googleVis)
+Fruits
+
+# aggregate() 사용 예시
+aggregate(Sales ~ Fruit, Fruits, max)
+aggregate(Sales ~ Fruit + Year, Fruits, max)
+
+# apply() 사용 예시
+m1 = matrix(c(1,2,3,4,5,6), 2, byrow=TRUE)
+apply(m1, 1, sum)
+apply(m1, 2, sum)
+apply(m1[, c(2,3)], 2, max)
+
+# 리스트 연산
+l1 = list(Fruits$Sales)
+l2 = list(Fruits$Profit)
+lapply(c(l1, l2), max)  # 리스트형 반환
+sapply(c(l1, l2), max)  # 벡터형 반환
+lapply(Fruits[, c(4,5)], max)
+sapply(Fruits[, c(4,5)], max)
+
+# tapply() 사용 예시
+tapply(Sales, Fruit, sum)
+tapply(Fruits$Sales, Fruits$Fruit, sum)
+attach(Fruits)
+tapply(Sales, Fruit, sum)
+
+# mapply() 사용 예시
+v1 = c(1,2,3,4,5)
+v2 = c(10,20,30,40,50)
+v3 = c(100,200,300,400,500)
+mapply(sum, v1, v2, v3)
+
+# CSV 파일 읽기
+d1 <- read.csv("data1.csv", fileEncoding = "cp949")
+View(d1)
+apply(d1[, c(2:15)], 2, sum)
+apply(d1[, c(2:15)], 1, sum)
+
+# 사용자 정의 함수 예시
+my1 = function() {
+  return(10)
+}
+my1()
+
+my2 = function(a) {
+  return(a^2)
+}
+my2(3)
+
+my3 = function(a, b) {
+  return(abs(a - b))
+}
+my3(2, 3)
+
+my4 = function(a, b) {
+  if (a > b) {
+    c = a - b
+  } else {
+    c = b - a
+  }
+  return(c)
+}
+my4(2, 3)
+
+# 정렬
+s1 = Fruits$Sales
+sort(s1)
+sort(s1, decreasing = TRUE)
+
+# plyr 패키지
+install.packages("plyr")
+library(plyr)
+f = read.csv("fruits_10.csv")
+
+# ddply() 그룹 요약
+ddply(f, 'name', summarise, sum_qty = sum(qty), sum_price = sum(price))
+ddply(f, 'name', summarise, max_qty = max(qty), min_price = min(price))
+ddply(f, c('year', 'name'), summarise, max_qty = max(qty), min_price = min(price))
+
+# transform 예시
+ddply(f, 'name', transform, sum_qty = sum(qty), pct_qty = round(qty * 100 / sum(qty), 2))
