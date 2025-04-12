@@ -1,0 +1,94 @@
+# 클라우드 컴퓨팅 및 AWS 핵심 개요
+
+## 1. 클라우드 컴퓨팅이란?
+필요할 때 원하는 만큼 즉시 제공되는 **온디맨드 IT 자원 서비스**.
+
+## 2. 온프레미스(On-Premise)란?
+자체 공간과 자원을 통해 직접 구축 및 운영하는 **전통적인 방식**.
+
+## 3. 클라우드 vs 온프레미스 비교
+
+| 항목 | 클라우드 | 온프레미스 |
+|------|----------|------------|
+| 운영 방식 | 인터넷 기반 | 물리적 구축 필요 |
+| 유연성 | 유연하고 확장 가능 | 고정된 인프라 |
+| 비용 | 사용한 만큼 지불 | 초기 비용 큼 |
+| 관리 | 공급자 관리 | 자원 직접 관리 |
+
+## 4. 클라우드 컴퓨팅의 이점
+- **Agility (민첩성)**
+- **Elasticity (탄력성)**
+- **Cost Saving (비용 절감)**
+- **글로벌 서비스 제공**
+- **트래픽 자동 대응**
+- **AI/빅데이터 확장 용이**
+
+## 5. 클라우드 서비스 모델
+- **IaaS (Infrastructure as a Service)**  
+  인프라 제공 (예: EC2, S3, VPC, EBS)
+- **PaaS (Platform as a Service)**  
+  플랫폼 제공, 서버 관리 불필요 (예: Beanstalk, Lambda, RDS)
+- **SaaS (Software as a Service)**  
+  소프트웨어를 인터넷으로 제공 (예: WorkDocs, Chime)
+
+## 6. AWS 핵심 서비스 요약
+- **EC2**: 가상 서버
+- **Lambda**: 이벤트 기반 서버리스 컴퓨팅
+- **S3**: 객체 스토리지
+- **RDS**: 관계형 데이터베이스
+- **DynamoDB**: NoSQL 데이터베이스
+- **VPC**: 가상 네트워크
+- **Route 53**: DNS 서비스
+- **CloudFront**: CDN 서비스
+- **IAM**: 접근 제어
+- **Security Group**: 인스턴스 트래픽 제어
+
+## 7. AWS 인프라 구조
+- **Region (리전)**: 예) 서울 `ap-northeast-2`
+- **AZ (Availability Zone)**: 물리적으로 분리된 데이터 센터
+- **Edge Location**: 글로벌 콘텐츠 캐싱 거점
+- **ARN (Amazon Resource Name)**: 자원 식별자
+
+## 8. VPC 구성요소
+- Subnet  
+- Route Table  
+- Internet Gateway  
+- NAT Gateway  
+- VPC Endpoint  
+
+## 9. IAM (Identity and Access Management)
+- 구성 요소: 사용자, 그룹, 역할, 정책, MFA
+- 리소스 접근 제어를 위한 핵심 서비스
+
+## 10. PEM과 PPK 차이
+- **PEM**: Linux/macOS용 키 (ssh에서 사용)
+- **PPK**: Windows용 키 (PuTTY에서 사용)
+
+## 11. Amazon S3 개요
+- 객체 스토리지
+- 무제한 저장 가능
+- 99.999999999% 내구성 (11 9s)
+- 최소 3개의 AZ에 자동 복제
+- 구성요소:
+  - **Bucket**: 저장 단위
+  - **Object**: 데이터 + 메타데이터
+
+## 12. S3 보안 및 정책
+- 기본 비공개 설정
+- 접근 제어 방식:
+  - **Bucket Policy**
+  - **IAM Policy**
+  - **Resource Policy**
+
+## 13. 스케일링 개념
+- **Scale Up**: 성능 높은 서버로 변경 (간단하지만 한계 있음)
+- **Scale Out**: 서버 수를 늘려 분산 처리 (무중단 확장 가능)
+
+## 14. Auto Scaling
+트래픽 변화에 따라 인스턴스를 자동으로 증감하는 서비스
+
+### 구성 요소
+- **Launch Template**: 인스턴스 설계도
+- **Auto Scaling Group (ASG)**: 인스턴스 그룹
+- **Scaling Policy**: 조건별 스케일 조절
+- **CloudWatch**: 모니터링 및 트리거 역
