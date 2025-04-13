@@ -1,0 +1,79 @@
+ 화면 전환 시 호출되는 메서드 (Flutter 기준)
+ A화면 → B화면 (push() 시)
+A화면:
+그대로 유지 (dispose 안 됨)
+B화면:
+initState() → build()
+ B화면 → A화면 (pop() 시)
+B화면:
+dispose()
+A화면:
+그대로 유지 (필요 시 build() 다시 호출될 수 있음)
+ import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: FirstPage());
+  }
+}
+
+class FirstPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    print('FirstPage: build()');
+
+    return Scaffold(
+      appBar: AppBar(title: Text('First Page')),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Go to Second Page'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SecondPage()),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class SecondPage extends StatefulWidget {
+  @override
+  _SecondPageState createState() => _SecondPageState();
+}
+
+class _SecondPageState extends State<SecondPage> {
+  @override
+  void initState() {
+    super.initState();
+    print('SecondPage: initState()');
+  }
+
+  @override
+  void dispose() {
+    print('SecondPage: dispose()');
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('SecondPage: build()');
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Second Page')),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Go Back'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+}
