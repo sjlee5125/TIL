@@ -1,0 +1,48 @@
+자바역사 : 
+•썬마이크로시스템즈의제임스고슬링팀에서개발한객체지향프로그래밍언어
+•1991년그린프로젝트라는이름으로시작해1995년발표됨
+•초기가전제품에탑재해동작하는프로그램을위해개발됨
+•현재웹애플리케이션서버분야에서많이사용됨
+•2009 ~ 2010년Oracle이썬마이크로시스템즈를인수하면서소유권이Oracle로이전됨
+•2012년Android에서Java API사용관련Oracle과Google간의분쟁발생
+•2016년1월Oracle은JDK9 기반Java 런타임환경에서브라우저플러그인(Applet)을중단
+•2017년9월Oracle은Java EE를Eclipse Foundation에제출함
+•EclipseFoundation은javax및java 상표사용에Oracle과합의실패
+•javax및java 상표를사용하지못해Jakarta EE로명칭및패키지명변경
+Java의 특징
+•	WORA (Write Once, Run Anywhere): 한 번 작성한 코드는 어떤 OS에서도 실행 가능
+•	컴파일 방식: Java 컴파일러가 **바이트코드(.class)**로 변환 → 각 OS의 JVM에서 실행
+•	표준화:
+o	Java API는 **JCP(Java Community Process)**를 통해 표준화
+o	JSR(Java Specification Request): Java 플랫폼에 대한 공식 제안 문서
+자바 라이선스 : oracle jdk는 일정 기간 무료 ,이후 유료
+Spring Framework 요약
+•	Spring Framework : 
+대규모 자바 애플리케이션을 신속하고 편리하게 개발할 수 있게 해주는 오픈소스 프레임워크
+•	일반적으로 **스프링(Spring)**이라 불리며,
+➤ 좁게는 Spring Framework,
+➤ 넓게는 Spring 생태계 전체를 의미함 (ex: Spring Boot, Spring Data 등)
+
+스프링프레임웍특징
+스프링모듈 역할
+ 스프링mvc기본구성요소
+mvc구조
+웹프로젝트환경설정파일
+각설정파일 역할
+bean객체 
+view
+maven에서의 scope
+계층적구조
+계층적구조 순서
+뷰:books.jsp
+스프링jdbc
+스프링설정 -전체설정내용
+Component-scan 컨트롤 등록
+Requestmapping (class,메소드)
+Model and view
+경로변수(처리하는방법) 매트릭스변수도 같음
+스프링 폼태그 역할 제약사항 조건
+
+
+
+
