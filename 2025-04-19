@@ -1,154 +1,259 @@
-자바역사 : 
-•썬마이크로시스템즈의제임스고슬링팀에서개발한객체지향프로그래밍언어
-•1991년그린프로젝트라는이름으로시작해1995년발표됨
-•초기가전제품에탑재해동작하는프로그램을위해개발됨
-•현재웹애플리케이션서버분야에서많이사용됨
-•2009 ~ 2010년Oracle이썬마이크로시스템즈를인수하면서소유권이Oracle로이전됨
-•2012년Android에서Java API사용관련Oracle과Google간의분쟁발생
-•2016년1월Oracle은JDK9 기반Java 런타임환경에서브라우저플러그인(Applet)을중단
-•2017년9월Oracle은Java EE를Eclipse Foundation에제출함
-•EclipseFoundation은javax및java 상표사용에Oracle과합의실패
-•javax및java 상표를사용하지못해Jakarta EE로명칭및패키지명변경
-Java의 특징
-•	WORA (Write Once, Run Anywhere): 한 번 작성한 코드는 어떤 OS에서도 실행 가능
-•	컴파일 방식: Java 컴파일러가 **바이트코드(.class)**로 변환 → 각 OS의 JVM에서 실행
-•	표준화:
-o	Java API는 **JCP(Java Community Process)**를 통해 표준화
-o	JSR(Java Specification Request): Java 플랫폼에 대한 공식 제안 문서
-자바 라이선스 : oracle jdk는 일정 기간 무료 ,이후 유료
-•	Spring Framework : 
-대규모 자바 애플리케이션을 신속하고 편리하게 개발할 수 있게 해주는 오픈소스 프레임워크
-•	일반적으로 **스프링(Spring)**이라 불리며,
-➤ 좁게는 Spring Framework,
-➤ 넓게는 Spring 생태계 전체를 의미함 (ex: Spring Boot, Spring Data 등)
+앱 개발방식
+컴퓨팅 사고
+-	문제분해 
+-	패턴인식 
+-	추상화(일반화) 
+-	알고리즘 설계
+인공지능 활용
+플러터 특징
+•	크로스플랫폼 지원
+•	고성능
+•	사용자 정의 UI 구성 용이
+•	빠른 개발
+•	강력한 커뮤니티 및 생태계
+다트
+-	변수 타입: 데이터(값)을 저장하는 장소
+	변수 종류를 타입(type) 또는 자료형이라 함
+	Dart는 크게 숫자형과 문자열의 기본 변수 타입을 제공 함
+	int : 정수
+double : 실수(소수점)
+String: 문자열
+bool: 참 또는 거짓
+-	상수 final : 값이 한번 설정하면 바꿀 수 없는 것
+-	 final과 const의 차이점 : final은 동작중에 값이 고정되나 const는 컴파일 시점에서 값이 고정 됨
+타입 검사 (is, is!) 연산 결과 : bool형
+•	is : 같은 타입이면 true, 아니면 false
+•	is! : 같은 타입이면 false, 아니면 true
+형 변환 요약 (C# 및 유사 언어 기준)
+•	형 변환(Casting): 데이터 타입을 다른 타입으로 변환하는 것
+•	명시적 형 변환 필요: double → int처럼 정보 손실이 있는 경우, 명시적 형 변환
+•	객체지향에서 형 변환 필요성:
+o	부모 ↔ 자식 클래스 간 업캐스팅/다운캐스팅 시 사용
+o	다양한 타입을 하나의 컬렉션에 담거나, 특정 기능 호출 시 필요
+class Prompt {
+  String text;
+  Prompt(this.text);
+}
+class QuestionPrompt extends Prompt {
+  String difficulty;
+  QuestionPrompt(String text, this.difficulty) : super(text);
+  void analyzeWithLLM() {
+    print("LLM 분석 중: '$text' (난이도: $difficulty)");
+  }
+}
+void main() {
+  Prompt p = QuestionPrompt("Explain inheritance", "Easy");  // 업캐스팅
+  if (p is QuestionPrompt) {
+    QuestionPrompt q = p as QuestionPrompt;  // 다운캐스팅
+    q.analyzeWithLLM();  // LLM 분석 중: 'Explain inheritance' (난이도: Easy)
+  }
+}
+선택 매개변수 : 선택적으로 함수에 전달하고자 하는 매개변수의 경우{}로 표시
+상속 vs 인터페이스: 
+상속 : 
+-	하나의 부모 클래스로부터 기능(속성_+메소드)을 물려받음
+-	Extends 키워드 사용
+-	코드 재사용에 유리 
+-	단일 상속만 가능(부모는1 명만)
+장점 : 코드 재사용률 up, 공통 기능 통합 관리(유지보수 편리)
+단점 : 유연성 down (이미  상속한 부모 외 다른 기능 추가 어려움), 
+다중상속 불가 -> 구조 복잡해지면 문제
+인터페이스 : 
+-	기능(메서드 시그니처(만 정의 -> 구현은 자식 클래스가 직접 함
+-	dart에서는 implements로 구현
+-	유연성up , 설계중심 개발
+장점 : 다중 구현 가능 , 설계중심 -> 협업/표준화에 강력
+단점 : 코드재사용불가 (구현은 항상 자식이 직접) , 
+모든메소드 구현 필요 -> 반복필요 많아짐
+클래스 :객체의 설계도, 설계도에 의해 만들어진 형태를 객체, 또는 클래스를 인스턴스화 
+List : 순서가 있는 연속된 자료를 표현할 때 사용
+List<String> items = [ ‘짜장’, ‘라면’, ‘볶음밥’ ];
+var items = [ ‘짜장’, ‘라면’, ‘볶음밥’ ];
+Map : 키와 값으로 쌍 지어진 사전 형태의 자료 구조를 표현할 때 사용(=Dictionary )
+// Map<String, String> cityMap = { ... } 과 같음
+var cityMap = {
+  '한국': '부산',
+  '일본': '도쿄',
+ 	 '중국': '북경',};
 
-스프링프레임웍특징 :
--	일반적인 자바 객체를 위한 POJO 지원
--	객체간의 결합도를 줄이는 의존성 주입(DI) 지원
--	공통 모듈을 재사용하기위한AOP 지원
--	일관성있는 모듈의 트랜잭션 지원
--	전자 정부 표준 프레임워크의 기반 기술
--	대한민국 공공기관의 웹애플리케이션개발시 사용이 권장되는 국가가 관리하는 공식 프레임 워크
-스프링 모듈 역할 : 
+// 기존 값 변경
+cityMap['한국'] = '서울';
+print(cityMap.length);      // 3
+print(cityMap['중국']);     // 북경
+print(cityMap['미국']);     // null (아직 존재하지 않음)
+// 새로운 값 추가
+cityMap['미국'] = '워싱턴';
+print(cityMap['미국']);     // 워싱턴
+Set : 중복되지 않는 집합을 표현할 때 사용함
+ 	// Set<String> citySet = { ... } 와 같음
+var citySet = {'서울', '수원', '오산', '부산'};
+// 요소 추가
+citySet.add('안양');      // '안양' 추가
+// 요소 삭제
+citySet.remove('수원');   // '수원' 삭제
+// 포함 여부 확인
+print(citySet.contains('서울'));   // true
+print(citySet.contains('도쿄'));   // false
+함수형 프로그래밍 : 
+-	일급 객체 : 값이나 개체가 언어 내에서 동등한 대우를 받는다는 것
+함수를 변수에 저장할 수 있음
+함수를 함수 인자에 넘길 수 있음
+함수를 함수의 반환값으로 사용할 수 있음
+-	ForEach : 다트 언어의 일급 객체의 특징으로 List의 목록을 조회하는 foreach()메서드 가능
+-	Where: 조건을 필터링할 때 사용하는 함수
+-	Map : 반복되는 값을 다른 형태로 변환하는 함수
 
-Spring FrameWork(Core) : 핵심 컨테이너 및 의존성 주입(DI) 프레임워크 구성 (Spring Beans, Spring MVC, Spring Web 등 포함)
-Spring WebFlux :  비동기 / 논블로킹(Reactive)웹 애플리케이션 지원
-Spring Boot : 독립 실행형 스프링 앱을 쉽게 연동할 수 있도록 인터페이스 기반 데이터 접근 지원
-Spring Data : 다양한 데이터베이스와 쉽게 연동할 수 있도록 인터페이스 기반 데이터접근 제공
-Spring Security : 인증,권한 제어 등 강력한 보안 기능 제공
-Spring Integration : 메시징 기반으로 내부 및 외부 시스템 간 통합 지원
-Spring Batch : 대용량 데이터 치리 및 배치 애플리케이션 지원(트랙잭션 ,로깅, 재시작등)
-Spring Cloud : 클라우드 네이티브 애플리케이션 개발 지원(구성관리, 서비스검색, 회로차단기)
-Spring Native : 스프링 앱을 네이티브 실행파일로 컴파일 가능하게 지원(성능 향상 및 경량화)
-스프링mvc기본구성요소 : 
--	프런트 컨트롤러 :애플리케이션의 흐름관리
--	모델 : 애플리케이션의 데이터가 들어 있는 객체
--	컨트롤러 : 애플리케이션의 비즈니스 로직을 포함하는 자바 클래스
--	뷰 : 모델의 정보를 특정 형식에 맞게 표현
-mvc구조
-Spring MVC 동작 흐름
-1.	사용자 요청: 웹 브라우저에서 URL 요청
-2.	DispatcherServlet: 요청 수신 후 처리 흐름 제어 (Front Controller)
-3.	HandlerMapping: 요청 URL에 해당하는 컨트롤러 결정
-4.	Controller: 요청 처리 및 ModelAndView 객체 반환
-5.	ViewResolver: 뷰 이름에 해당하는 실제 JSP 경로 결정
-6.	View(JSP): 최종 화면 생성 및 사용자에게 응답 전송
-Spring Mvc 핵심 구성요소
-DIspatcherServlet , HandlerMapping , HandlerAdapter , Controller , ModelAndView, ViewResolver , View
-웹프로젝트환경설정파일
-web.xml
-- 웹 프로젝트의 핵심 환경 설정 파일 (배치 설명자)
-- 주요 역할:
-  • DispatcherServlet 등록
-  • 공통 context-param 등록 (루트 컨텍스트 설정)
-  • 이벤트 리스너 등록 (ContextLoaderListener 등)
-  • 필터 등록 (예: UTF-8 인코딩 필터)
-• URL과 서블릿 매핑 설정
-root-context.xml
-- 스프링 루트 컨텍스트 설정 파일
-- 주요 역할:
-  • 웹 요청과 무관한 공통 Bean 설정 (Service, DAO, DB 등)
-  • 전체 애플리케이션에서 공유되는 객체 정의
-  • View 관련 설정은 포함하지 않음
-servlet-context.xml
-- 스프링 서블릿 컨텍스트 설정 파일 (Spring MVC 핵심 구성)
-- 주요 역할:
-  • @Controller, @RequestMapping 어노테이션 기반 컨트롤러 활성화
-  • 컨트롤러 자동 스캔 설정 (component-scan)
-  • 정적 리소스(css, js, 이미지 등) 경로 매핑
-  • ViewResolver 설정을 통한 View 경로 구성
-Bean 객체 (Spring Bean)
-- Spring 컨테이너가 생성하고 관리하는 객체
-- 주로 Service, Repository, Controller 등과 같은 구성 요소
-- 특징:
-  • 싱글톤 범위로 관리됨 (기본)
-  • 의존성 주입(DI)을 통해 객체 간 결합도를 낮춤
-• XML, Java Config, 어노테이션(@Component 등)으로 등록 가능
-View (뷰)
-- 사용자에게 보여지는 화면을 구성하는 요소
-- Spring MVC에서는 컨트롤러가 반환한 모델 데이터를 시각적으로 표현
-- 대표적인 뷰 기술: JSP, Thymeleaf, Freemarker 등
-- ViewResolver를 통해 View 경로 및 확장자를 자동 매핑
-- MVC의 마지막 단계로 사용자에게 응답을 생성하여 전달
-Maven에서의 scope (의존성 범위)
-- Maven 의존성이 어디서, 어떻게 적용될지를 지정하는 속성
-- 주요 종류:
-  • compile: 기본값, 모든 클래스 경로에서 사용됨 (빌드/테스트/실행 시 포함)
-  • provided: 컨테이너(JDK, Tomcat 등)가 제공함 (컴파일 시 포함, 실행 시 제외)
-  • runtime: 실행 시에만 필요한 라이브러리 (컴파일 시 제외됨)
-  • test: 테스트 코드에서만 사용됨
-  • system: 로컬에서 직접 지정한 JAR 파일 사용 (Maven repository에서 관리되지 않음)
-• import: dependencyManagement에서 사용, 다른 POM의 의존성을 가져옴
-📌 스프링 웹 MVC의 계층적 구조
-도메인 객체 (Domain Object)
-- 데이터 모델 정의 클래스
-- 예: Book.java
-퍼시스턴스 계층 (Persistence Layer)
-- 데이터베이스 접근/처리 담당
-- 예: BookRepository, BookRepositoryImpl
-- @Repository 사용
-서비스 계층 (Service Layer)
-- 비즈니스 로직 처리
-- 퍼시스턴스 계층과 프레젠테이션 계층의 연결 역할
-- 예: BookService, BookServiceImpl
-- @Service 사용
-프레젠테이션 계층 (Presentation Layer)
-- 사용자와 직접 상호작용
-- 구성 요소:
-  • Controller (@Controller): 사용자 요청 처리
-  • View (JSP): 결과 화면 출력
-  • Model: View로 전달되는 데이터
-계층적 흐름 순서:
-도메인 객체 → 퍼시스턴스 → 서비스 → 프레젠테이션(컨트롤러 → 뷰) 
-계층적 구조 순서 (Layered Architecture)
-1. 도메인 객체 (Domain Object) - 데이터 구조 정의 (예: Book.java)
-2. 퍼시스턴스 계층 (Persistence Layer) - DB 접근/저장소 (예: BookRepository)
-3. 서비스 계층 (Service Layer) - 비즈니스 로직 처리 (예: BookService)
-4. 프레젠테이션 계층 (Presentation Layer)
-   - 컨트롤러: 요청 처리 (예: BookController)
-   - 뷰: 결과 출력 (예: books.jsp)
-📌 뷰: books.jsp
-- JSP 파일로 결과 화면 출력
-- `${bookList}` 모델 데이터를 JSTL로 반복 출력
-- Bootstrap 스타일 적용
-- 사용 위치: `/WEB-INF/views/books.jsp`
-스프링jdbc
-스프링설정 -전체설정내용
-📌 Component-scan 컨트롤러 등록
-- `@Controller` 사용: 클래스가 컨트롤러 역할임을 명시
-- Spring 설정 파일에 `<context:component-scan base-package="...">` 설정 시 자동 등록됨
-📌 @RequestMapping (class/메서드)
-- `@RequestMapping(value="/books", method=RequestMethod.GET)`
-  → URL `/books` 요청이 들어오면 해당 메서드 실행
-- 컨트롤러 메서드 단위에 사용되어 URL과 HTTP 메서드 매핑
-📌 Model and View
-- Spring에서 `Model` 객체를 사용하여 View에 데이터 전달
-- 예: `model.addAttribute("bookList", list);` → `${bookList}`로 JSP에서 출력
-- 반환값은 View 이름 (ex: `"books"`) → ViewResolver 통해 JSP 경로 완성됨
+-	컬렉션 if : 조건에 따라 요소를 넣을지 말지 결정
 
-경로변수(처리하는방법) 매트릭스변수도 같음
-스프링 폼태그 역할 제약사항 조건
+var isKorean = true;
+var items = [
+  '짜장',
+  '라면',
+  if (isKorean) '김치'  // 조건이 true일 때만 추가됨
+];
+
+print(items);  // [짜장, 라면, 김치]
+-	컬렉션 for : 반복문을 이용해 컬렉션 생성
+var base = ['a', 'b', 'c'];
+var result = [
+  for (var ch in base) ch.toUpperCase()
+];
+print(result);  // [A, B, C]
+Pubspec.yaml : 플루터/다트 프로젝트의 설정 파일
+name: my_app         # 앱 이름
+description: A new Flutter project.   # 설명
+version: 1.0.0       # 버전 정보
+environment:         # Dart SDK 환경
+  sdk: '>=3.0.0 <4.0.0'
+dependencies:        # 사용하는 외부 패키지 목록
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  http: ^0.13.5
+dev_dependencies:    # 개발 전용 패키지 (예: 테스트)
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/   # 이미지/파일 경로
+ 
+StatlessWidget :
+-	상태를 저장하지 않음 -> UI가 고정됨
+-	Build()한 번 실행 -> 상태 변경되도 반응x
+-	 
+
+StatefulWidget :
+-	setState()를 호출하면 build()가 다시 실행됨
+-	UI가 상태에 따라 동적으로 반응
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyStatefulApp());
+
+class MyStatefulApp extends StatefulWidget {
+  @override
+  _MyStatefulAppState createState() => _MyStatefulAppState();
+}
+
+class _MyStatefulAppState extends State<MyStatefulApp> {
+  int count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text("Stateful 예제")),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("버튼을 누른 횟수: $count"),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    count++;
+                  });
+                },
+                child: Text("증가하기"),
+              ),
+            ],
+          ),
+화면 배치에 쓰는 위젯 : 
+-	Container : 너비, 높이가 있는 영역
+-	Column : 수직 방향으로 위젯들을 배치
+-	Row : 수평 방향으로 위젯들을 배치
+-	Stack :위젯들을 순서대로 겹치게함
+-	SingleChildScrollView : 화면크기를 넘어가면 스크롤이 생기게 함
+-	ListView, ListTile : 리스트를 표시하는 위젯
+-	GridVIew : 열 수를 지정하여 그리드 형태로 표시하는 위젯
+-	PageVIew : 여러 페이지를 좌우로 슬라이드하여 넘길 수 있음
+-	AppBar ,Tab,TabBarView : AppBar에 TabBar를 배치하고 Tab및 body에 TabBar View를 배치하여 탭으로 이동하는 화면을 구성
+-	BottomNavigationBar: 하단에 2~5개의 탭 메뉴를 구성할 수 있게 해주는 위젯
+위치,정렬 크기 위젯:
+-	Center : 중앙으로 정렬시키는 위젯
+-	Padding : 안쪽 여백을 표현할 때 사용하는 위젯
+-	Align : 자식 위젯을 정렬 방향을 지정하는 위젯
+-	Expanded : 자식 위젯의 크기를 최대한으로 확장시켜주는 위젯
+-	SizeBox : 자식 위젯을 특정 사이즈로 조정하고자 할 때 사용하는 위젯
+-	Card : 카드 형태의 모양을 제공해주는 위젯
+버튼 위젯 : 
+-	ElevatedButton : 입체감을 가지는 일반적인 버튼 위젯
+-	TextButton : 평평한 텍스트 버튼 위젯
+-	IconButton : 아이콘을 표시하는 버튼 위젯
+-	FloatingActionButton : 입체감 있는 둥근 버튼 위젯
+입력 위젯 : 
+-	TextField : 글자를 입력받는 위젯
+-	CheckBox와 Switch : 선택 체크, 체크해제를 지워나흔 위젯
+-	Radion와 RadioListTile : 선택 그룹 중 하나를 선택할 때 사용하는 위젯
+-	DropDownButton : 여러 아이템 중 하나를 고를 수 있는 형태의 위젯
+다이얼로그 위젯 : 
+-	AlertDialog : 사용자 확인을 요구하거나 메시지를 표시하는 용도
+-	DatePicker : 날짜를 선택할 때 사용
+-	TimePicker : 시간을 선택할 때 사용
 
 
-
+이벤트 위젯 : 
+-	GestureDetector , InkWell : 글자나 그림같이 이벤트 속성이 없는 위젯에서 이벤트를 사용하고자 할 때 사용
+애니메이션 위젯 : 
+-	Hero : 페이지 전환시 연결되는 애니메이션 지원 (tag값을 동일하게 맞춤)
+-	AnimatedContainer : 한 화면 내에서 변경된 프로퍼티에 의해 애니메이션
+-	SilverAppBar , SilverFillRemaining : 화면 헤더를 동적으로 표현
+-	SilverAppBar , SilverList : LIstView를 사용하여 Silver효과를 주고자 할 때
+쿠퍼티노 디자인 : 
+-	쿠퍼티노 기본UI : 머터리얼 디자인 대신 쿠퍼티노 디자인 적용
+-	CupertinoAlertDialog :쿠퍼티노 스타일의 AlertDialog
+-	CupertinoPicker : ios에서 자주사용되는 피커
+네비게이션 동작성 : 
+-	First , Second Page작성
+-	Push로 새로운 화면 호출 , pop으로 이전화면으로 이동
+-	새로운 화면에 값 전달하기 : 생성자 매개변수로 값 전달
+-	이전 화면으로 데이터 돌려주기 : pop()매개변수 -> push() 변환값 전달
+Routes를 활용한 네비게이션 :
+ routes정의 ->  routes에 의한 화면이동 (push()대신 pushNamed()사용
+StatefulWidget의 상태 : 
+-	InitState() : 위젯이 생성되 때 호출
+-	Build() : 위젯이 그려져야 할 때 호출
+-	Dispose() : 위젯이 완전히 종료될 때(pop 될때)호출
+Null Safety (널안전) : 컴파일 타임에 null오류를 방지할 수 있게 해주는 dart기능
+-	String : 절대 null이 될수 없는 변수
+-	String? : null이 될 수도 있는 변수
+-	Late : 초기화를 늦출 수 있지만 반드시 나중에 값을 설정해야 함
+-	! : null이 아님을 강제로 단언
+-	?? : null일 경우 대체값 제공
+-	?. : null이면 메서드나 프로퍼티를 호출하지 않음
+String name = '홍길동';     // null 불가
+String? nickname;         // null 가능
+void main() {
+  nickname = '길동이';
+  print(name.length);       // OK
+  print(nickname?.length);  // null-safe 방식
+  print(nickname ?? '없음'); // null이면 '없음' 출력
+}
+왜 중요 :
+-	앱 실행 중 null로 인한 크래시방지
+-	코드의 신뢰성과 안정성 향상
+-	컴파일 타임에 오류 미리잡음
+Flutter3에서는 기본적으로 널안전이 강제 적용 
+•	8장 플러터 2변경점 : 1문항
+o	널 안전한 코드 : 1문항 (!주의! flutter 3기준으로 널에 안전한 코드를 LLM을 활용해서 숙지할 것!)
 
