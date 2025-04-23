@@ -1,0 +1,101 @@
+Nfm : 통신 네트워크의 상태, 베포, 업그레이드, 삭제 등을 관리하는 시스템
+오토스케일링 (스케일아웃 스케일업)
+스케일링 : 
+-	애플리케이션 또는 시스템의 성능을 높이기 위해 컴퓨터 리소스를 확장하거나 축소하는 것
+-	요청이 많아질 때 처리할 수 있도록 서버를 키우는 것
+스케일 업 : 서버 한 대의 성능을 높이는 방식
+장점 : 단순하고 설정이 쉬움
+단점 : 물리적인 한계 존재(더 이상 업그레이드 불가), 재시작 필요성 있음, 하나의 서버에만 의존 -> 장애 발생 시 위험
+스케일 아웃 : 서버를 여러 대로 늘려서 처리 성능을 확장하는 방식
+장점 : 무중단 확장 가능
+단점 : 복잡합 아키텍처, Load Balancer(ELB)등의 구성필요
+오토 스케일링 구성 요소 :
+-	Launch Template : 새 인스턴스를 생성할 때 필요한 설정을 담고 있는 설계도
+-	Auto Scaling Group (ASG) : 인스턴스를 묶어서 관리하는 단위
+-	Scaling Policy(스케일링 정책) : 언제 , 어떻게 서버 수를 조절하지에 대한 규칙
+-	CloudWatch 알람 : 지표를 감시하다 스케일링 정책을 실행하는 역할
+S3버킷(오류화면보여주고 왜인가 고치는법)
+권한 설정: 
+Arn:aws:sw:::my-bucket/images/*  #해당 경로에 있는 모든 객체 대상으로 권한설정
+{
+"Effect": "Allow",
+"Principal": "*",
+"Action": "s3:GetObject",
+"Resource": "arn:aws:s3:::demo.rwlecture.com/*"
+}
+Aws CLI(명령어) :
+-	Aws s3 ls : 버킷 목록 확인
+-	Aws s3 ls s3://버킷이름 / : 버킷 안의 파일 목록
+-	Aws s3 cp 로컬 경로 s3://버킷이름/경로 : 파일 업로드
+-	Aws s3 cp s3://버킷이름/경로 로컬경로 :파일 다운로드
+-	Aws s3 cp s3://my-bucket/folder ./local-folder –recursive : 디렉토리 다운로드
+-	Aws s3 cp ./local-folder s3://my-bucket/folder –recursive: 디렉토리 업로드
+ELB : 
+-	들어오는 어플리케이션 트래픽을 아마존 인스턴스 , 컨테이너, ip주소 , 람다 함수와 같은 여러 대상에 자동 분산 시킴
+-	단일 가용 영역, 여러 가용 영역에서 다양한 어플리케이션 부하를 처리가능
+-	제공하는 3가지 로드밸런서는 모두 어플리케이션의 내결합성에 필요한 고가용성 자동 확장/축소 강력한 보안을 갖추고 있음
+특징 : Application Load Balancer, Network load Balancer , Classic Load Balancer
+-	다수의 서비스에 트래픽을 분산 시켜주는 서비스 
+-	Health Check : 직접 트래픽을 발생시켜 인스턴스가 살아있는지 체크
+-	오토 스케일링과 연동가능
+-	여러 가용역역에 분산가능
+-	지속적으로 ip주소가 바뀌며 ip고정 불가능 : 항상 도메인 기반으로 사용
+종류 : 
+-	Application Load Balancer, : 똑똑함 ,트래픽을 모니터링하여 라우팅 가능 , 
+-	 Network load Balancer : 빠름 , TCP기반 빠른 트래픽 분산, elastic ip할당 가능
+-	 Classic Load Balancer : 구시대 , 지금 잘 안씀
+ALB – Target Group 
+-	타겟 그룹 : ALB가 트래픽을 분산시킬 대상을 논리적으로 묶어놓은 그룹
+ aws에서 제공하는 트래픽 분산 서비스 , 여러 ec2 인스턴스에 들어오는 요청을 자동으로 분산시킴 
+시큐리티그룹
+-	그룹 수정 : 보안 탭-> 보안 그룹 클릭 -> 인바운드 규칙 편집 -> 규칙 추가 -> 모든 ICMP-IPv4 -> 내ipt -> 규칙 저장
+-	시큐리티 그룹에 HTTP추가 : http=tcp80 포트를 내ip로 변경
+S3실습한거
+정적호스팅 , 
+: 정적인 파일을 웹서버 없이 바로 브라우저에서 볼 수 있도록 하는 방식
+-	S3 퍼블릭 엑세스 허용
+-	Index.html 생성
+-	사진추가 class->img 폴더 생성
+-	파일 업로드 index.html을 s3에 업로드, class/img에 업로드
+-	Index.html 접근 
+-	S3버킷에 권한 추가
+버킷정책 : 
+-	S3 리소스(버킷 및 그 안의 객체들)에 대한 접근 제어 정책
+-	Json 포맷의 문서
+-	버킷 단위로 붙이는 정책 -> 버킷안의 모든 객체에 적용 가능
+-	IAM 정책과는 다르게 리소스 자체에 붙는 정책
+모든 객체를 퍼블릭하게 접근 허용하도록 설정하는 예제
+  {
+  "Version": "2012-10-17", // 정책 문법 버전
+  "Statement": [
+    {
+      "Sid": "PublicWebsiteAllow", // 퍼블릭 접근 허용 식별자
+      "Effect": "Allow", // 허용 설정
+      "Principal": "*", // 모든 사용자에게 허용
+      "Action": "s3:GetObject", // 객체 다운로드 권한 부여
+      "Resource": [
+        "arn:aws:s3:::sgu-202500-s3-test/index.html",        // index.html만 허용
+        "arn:aws:s3:::sgu-202500-s3-test/class/img/*"    // class/img 폴더 내 전체 허용
+      ],
+      "Condition": {
+        "IpAddress": {
+          "aws:SourceIp": "123.123.123.123" // 특정 IP만 접근 가능
+        }
+      }
+    }, {
+      "Sid": "DenyGetObject", // 접근 거부 정책
+      "Effect": "Deny",       // 접근 금지
+      "Principal": "*",       // 모든 사용자
+      "Action": "s3:GetObject", // 객체 다운로드 제한
+"Resource": "arn:aws:s3:::sgu-202500-s3-test/class/test/*" // class/test 폴더 다운로드 금지
+    }
+  ]
+}
+시작템플릿 인스턴스 id가져오는 스크립트
+#!/bin/bash
+yum install httpd -y
+systemctl enable httpd
+systemctl start httpd
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/instance-id)
+echo "$INSTANCE_ID" > /var/www/html/index.html
