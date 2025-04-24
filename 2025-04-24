@@ -1,0 +1,290 @@
+알고리즘 개요 :
+⦁	문제를 해결하기 위한 단계적인 절차
+⦁	문제 해결 절차를 체계적으로 기술
+⦁	문제의 요구조건 입력과 출력으로 명시
+⦁	지적 추상화의 레벨 상승
+⦁	특정한 문제를 위한 알고리즘의 습득
+⦁	체계적으로 생각하는 훈련
+⦁	항상 보다 효율적이 알고리즘을 고안하는 것이 매우중요
+그리드 알고리즘:남은 거스름돈 액수를 넘지 않는 가장 큰 액면의 동전을 계속하여 선택.
+가짜 동전찾기 : log2 n번 
+1개의 가짜동전을 n개의 동전들중에서 찾는데 만일 동전의 수가 홀수 개이거나 1/2로나누다 보니 한쪽이 홀수 개이고 다른 한쪽이 짝수 개가 되는 경우를 처리하는 방안중 가장 좋은 것은
+⦁	총 동전의 수가 2k이 되도록 진짜 동전을 동전 더미에 더 채워 넣는다
+자료 구조 : 
+⦁	데이터를 처리하기 위해 모든 데이터는 메모리에 저장
+⦁	프로그래밍에서 데이터를 구조적으로 저장
+⦁	데이터를 구조적으로 저장하는데 필요
+⦁	데이터의 효율적인 접근을 위한 자료의 조직, 관리, 저장-삽입, 삭제,수정
+⦁	데이터 값의 모임, 데이터 간의 관계를 의미
+필요성 :
+⦁	메모리를 효율적으로 사용하기 위해 데이터에 맞는 자료구조 선택 중요
+⦁	문제의  해결 방법에 따라 자료구조 선택 달라짐
+⦁	프로그램 설계 시 가장 먼저 고려되어야 함
+⦁	프로그램의 성능에 직접적인 영향 미침
+알고리즘 :
+⦁	어떠한 문제를 해결하기 위한 일련의 순서
+⦁	컴퓨터 알고리즘
+⦁	정확성 :
+⦁	유한성 :
+⦁	수행성 : 
+스택 : 한쪽 끝이 막힌 자료구조, 입구가 하나이기 때문에 먼저 들어간 것이 가장 나중에 나오는 구조
+스택의 구현 :
+⦁	배열 자료구조를 이용한 스택 구현
+⦁	연결 리스트 자료구조를 이용한 스택 구현
+⦁	각 프로그래밍 언어에서 제공하는 자료구조를 이용하여 구현
+스택을 이용한 문제 해결 :
+⦁	괄호 확인
+⦁	우선순위 연산
+⦁	역순 출력
+큐 : 삽입과 삭제가 양 끝에서 각각 수행되는 자료구조(선입 선출)
+큐 구현 : 
+⦁	배열 자료구조를 이용한 큐 구조 ( 큐의 크기를 미리 정해놓고 사용)
+⦁	연결 리스트 자료구조를 이용한 큐 구현
+⦁	각 프로그래밍 언어에서 제공하는 자료구조를 이용하여 구현
+데크 : 양쪽 끝에서 삽입과 삭제를 허용하는 자료구조
+⦁	스택과 큐 자료구조를 혼합한 자료구조
+그래프 :
+에지 리스트 : 
+⦁	에지를 중심으로 그래프를 표현
+⦁	에지 리스트는 리스트에 출발 노드, 도착 노드를 저장하여 에지 표현
+⦁	출발 도착 가중치를 저장하여 가중치가 있는 에지 표현
+인접 행렬 : 
+⦁	2차원 리스트를 자료구조로 이용
+⦁	에지 리스트와 다르게 노드 중심으로 표현
+이진 트리 기본 : 
+⦁	포화 이진트리
+⦁	완전 이진트리 
+⦁	편향 이진트리 
+def push(item):
+    global top  # 전역 변수 top을 사용
+    stack.append(item)  # 스택에 아이템 추가
+    top += 1  # top 위치 증가
+def pop():
+    if len(stack) != 0:  # 스택이 비어있지 않다면
+        item = stack.pop(-1)  # 마지막 요소 제거 및 반환
+        top -= 1  # top 위치 감소
+        return item
+# 스택과 top 변수 초기화
+stack = []
+top = -1
+# 프로그램 실행 시 스택 연산 테스트
+if __name__ == "__name__":
+    push("apple")
+    push("orange")
+    push("cherry")
+    print("apple, orange, cherry를 push한 후의 상태:\t", end="")
+    print(stack, "\t<- top")  # 현재 스택 출력
+    print("top 항목 제거:", end='')
+    topvalue = pop()  # 스택의 최상위 요소 제거
+    print("topvalue =", topvalue)
+    push("pear")  # 새로운 요소 추가
+    print("pear 추가 후 top 요소 제거:", end="")
+    topval2 = pop()
+    print("topval2 =", topval2)  # 최상위 요소 제거 및 출력
+
+
+
+
+
+
+
+
+
+# 노드를 나타내는 내부 클래스 정의
+class Node:
+    def __init__(self, item, link):
+        self.item = item      # 노드가 저장하는 값
+        self.next = link      # 다음 노드를 가리키는 링크
+# 큐(LinkedQueue) 클래스 정의
+class LinkedQueue:
+    def __init__(self):  # 생성자
+        print("LinkedQueue 기본생성자")
+        self.front = None    # 큐의 앞쪽(삭제 위치)
+        self.rear = None     # 큐의 뒤쪽(삽입 위치)
+        self.size = 0        # 큐의 요소 개수
+    def isEmpty(self):  # 큐가 비었는지 확인
+        return self.size == 0
+    def add(self, item):  # 큐에 데이터 삽입 (enqueue)
+        newnode = Node(item, None)  # 새 노드 생성
+        if self.isEmpty():
+            self.front = newnode    # 처음 넣는 경우 front도 이 노드를 가리킴
+        else:
+            self.rear.next = newnode  # 기존 rear의 다음 노드로 연결
+        self.rear = newnode           # rear를 새 노드로 갱신
+        self.size += 1                # 큐 크기 증가
+    def dispq(self):  # 큐 출력 (front에서 rear까지 순서대로)
+        p = self.front
+        print("front=>", end="")
+        while p:
+            if p.next != None:
+                print("{!s:<7}".format(p.item), "=>", end="")  # 항목 + 화살표 출력
+            else:
+                print(p.item, end='')  # 마지막 노드
+            p = p.next
+        print(":rear")  # 큐 끝 표시
+    def delete(self):  # 큐에서 데이터 삭제 (dequeue)
+        if self.isEmpty():
+            raise EmptyError("queue가 텅비어있음")  # 예외 발생
+        else:
+            fitem = self.front.item      # 삭제할 데이터 저장
+            oldfront = self.front        # 삭제할 노드 참조
+            self.front = self.front.next # front를 다음 노드로 이동
+            del oldfront                 # 메모리에서 제거
+            self.size -= 1
+            if self.isEmpty():           # 삭제 후 큐가 비었다면 rear도 초기화
+                self.rear = None
+            return fitem                 # 삭제한 값 반환
+# 예외 클래스 정의 (큐가 비어 있을 때)
+class EmptyError(Exception): pass
+# 메인 실행 영역
+if __name__ == "__main__":
+    q = LinkedQueue()                         # 큐 객체 생성
+    q.add("apple")
+    q.add("orange")
+    q.add("cherry")
+    q.add("pear")
+    print("사과,오렌지,체리,배 삽입후=", end='')
+    q.dispq()                                 # 현재 큐 출력
+    delfruit = q.delete()                     # 첫 번째 데이터 삭제
+    print("사과 삭제후 delfruit=", delfruit)
+    q.dispq()
+    print("front가 가리키는 orange 노드 삭제후 queue=")
+    delfruit = q.delete()                     # 두 번째 데이터 삭제
+    print("오렌지 삭제후 delfruit=", delfruit)
+    q.dispq()                                 
+# 단일 연결 리스트 클래스 정의
+class SList:
+    # 노드 정의 (각 항목과 다음 노드를 저장)
+    class Node:
+        def __init__(self, item, link):
+            self.item = item      # 저장할 값
+            self.next = link      # 다음 노드 링크
+    # 연결 리스트 초기화
+    def __init__(self):
+        print("난 sLIST의 생성자 ")
+        self.head = None  # 첫 번째 노드 참조
+        self.size = 0     # 노드 개수
+    # 리스트가 비었는지 확인
+    def isEmpty(self):
+        return self.size == 0
+    # 리스트 앞쪽(head)에 노드 삽입
+    def insert_front(self, item):
+        self.head = self.Node(item, self.head)
+        self.size += 1
+    # 주어진 노드 p 다음에 새 노드 삽입
+    def insert_after(self, item, p):
+        if p is None:
+            print("삽입 실패: 주어진 노드가 None입니다.")
+            return
+        p.next = self.Node(item, p.next)
+        self.size += 1
+    # 특정 항목을 검색하여 인덱스 반환 (0부터 시작), 없으면 -1
+    def search(self, target):
+        p = self.head
+        for k in range(self.size):
+            if target == p.item:
+                return k
+            p = p.next
+        return -1
+    # 주어진 노드 p 다음 노드 삭제
+    def delete_after(self, p):
+        if self.isEmpty() or p.next is None:
+            print("삭제 실패: 삭제할 노드가 없습니다.")
+            return None
+        t = p.next
+        p.next = t.next
+        del t
+        self.size -= 1
+    # 리스트 앞쪽(head) 노드 삭제
+    def delete_front(self):
+        if self.isEmpty():
+            print("삭제 실패: 리스트가 비어 있음")
+            return None
+        t = self.head
+        self.head = self.head.next
+        del t
+        self.size -= 1
+    # 주어진 인덱스에 노드 삽입 (0은 앞쪽 삽입)
+    def insert_index(self, index, item):
+        if index < 0 or index > self.size:
+            print("삽입 실패: 인덱스 범위 초과")
+            return
+        if index == 0:
+            self.insert_front(item)
+            return
+        p = self.head
+        for _ in range(index - 1):
+            p = p.next
+        self.insert_after(item, p)
+    # 주어진 인덱스의 노드 삭제
+    def delete_index(self, index):
+        if self.isEmpty():
+            print("삭제 실패: 리스트가 비어 있음")
+            return
+        if index < 0 or index >= self.size:
+            print("삭제 실패: 인덱스 범위 초과")
+            return
+        if index == 0:
+            self.delete_front()
+            return
+        p = self.head
+        for _ in range(index - 1):
+            p = p.next
+        self.delete_after(p)
+    # 마지막 노드 삭제
+    def delete_final(self):
+        if self.isEmpty():
+            print("삭제 실패: 리스트가 비어 있음")
+            return
+        if self.size == 1:
+            self.delete_front()
+            return
+        p = self.head
+        while p.next.next:
+            p = p.next
+        t = p.next
+        p.next = None
+        del t
+        self.size -= 1
+    # 리스트 출력
+    def printList(self):
+        p = self.head
+        while p:
+            if p.next is not None:
+                print(p.item, "=>", end="")
+            else:
+                print(p.item)
+            p = p.next
+# 테스트 코드
+if __name__ == "__main__":
+    s = SList()
+    s.insert_front("apple")        # 리스트에 apple 삽입
+    s.insert_front("orange")       # 앞쪽에 orange 삽입 (orange => apple)
+    s.printList()
+    print()
+    s.insert_after("cherry", s.head.next)  # apple 뒤에 cherry 삽입
+    s.insert_front("pear")
+    s.insert_front("melon")
+    s.insert_front("grape")
+    s.insert_front("peach")
+    s.insert_front("banana")
+    s.printList()
+    print()
+    # cherry의 인덱스(0-based) 확인
+    print("cherry는 %d번째 노드에 있다" % (s.search("cherry") + 1))
+    # banana 다음 노드 삭제 (peach)
+    s.delete_after(s.head)
+    s.printList()
+    print()
+    # 첫 번째 노드(banana) 삭제
+    s.delete_front()
+    print("첫번째 노드 삭제 후")
+    s.printList()
+    print()
+    # 인덱스 2 위치에 melon 삽입
+    s.insert_index(2, "melon")
+    # 인덱스 3 위치 노드 삭제
+    s.delete_index(3)
+    # 마지막 노드 삭제
+    s.delete_final()
+    s.printList()
