@@ -1,0 +1,68 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const App = () => {
+  const [tuitionData, setTuitionData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTuitionData = async () => {
+      const serviceKey = 'vdCZUaw0OvQ9OVGqD6P9%2B15oBKd6n%2FrVlXWRTS2Sj6uoLcYjEUsNBBZ5o7RJiCjWrTKezCptYyNzCOGJlUZSHg%3D%3D';
+      const url = '/openapi/service/rest/FinancesService/getComparisonTuitionCrntSt';
+
+
+      const params = {
+        ServiceKey: serviceKey,
+        svyYr: 2023,
+        schlId: '0000034'
+      };
+
+      try {
+        const response = await axios.get(url, { params });
+        const items = response.data.response.body.items;
+        setTuitionData(items); // 데이터를 상태로 저장
+      } catch (err) {
+        setError('데이터를 불러오는 중 오류가 발생했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTuitionData();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return (
+    <div>
+      <h1>대학 등록금 현황</h1>
+      <table border="1" cellPadding="10">
+        <thead>
+          <tr>
+            <th>학교명</th>
+            <th>등록금</th>
+            <th>학기</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tuitionData.map((item, index) => (
+            <tr key={index}>
+              <td>{item.schlNm}</td>
+              <td>{item.tuitionAmt}</td>
+              <td>{item.semester}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default App;
