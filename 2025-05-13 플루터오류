@@ -1,0 +1,30 @@
+# Flutter 개발 요약 (2025-05-13)
+
+## 1. Flutter Doctor 결과
+- Flutter 버전: `3.29.3 (stable)`
+- OS: Windows 11 Pro (23H2, 64-bit)
+- Android toolchain 오류:
+  - `Unable to locate Android SDK`
+  - 해결 방법: **Android Studio 설치 후 Android SDK 구성 필요**
+    - [https://developer.android.com/studio](https://developer.android.com/studio)
+
+## 2. 개발 플랫폼 선택 관련 질문
+- Flutter는 웹, 데스크탑, 안드로이드, iOS 타겟 중 하나 선택 가능
+- 질문: “어떤 플랫폼으로 설치해야 하나요?”
+  - **답변 요약**: Chrome으로 디버깅할 경우 웹 지원만 필요하지만, 안드로이드 앱 개발 시 Android SDK 및 Android Studio 필수
+  - **추천**: Android Studio 설치 후 안드로이드 SDK 구성 완료하면 대부분의 문제 해결
+
+## 3. Shader 컴파일 오류 (웹 실행 시)
+- 오류 메시지:
+  ```
+  ShaderCompilerException: Shader compilation of "ink_sparkle.frag" failed
+  Exit code: -1073741819
+  ```
+- 원인 추정:
+  - GPU 또는 드라이버 호환성 문제
+  - 임시 해결 방법: 해당 shader 효과 비활성화 또는 `flutter clean` 후 다시 빌드
+
+## 4. 진행 상황 정리
+- Flutter 설치 및 기본 환경 구성 완료
+- Android Studio 및 Android SDK는 아직 미설치 상태
+- Chrome에서 웹 앱 실행 시 shader 관련 오류 발생
