@@ -1,7 +1,5 @@
 # 오늘의 내용 정리 (2025-05-11)
-
 ## 1. 연결 요소 개수 계산 - Python DFS
-
 ```python
 import sys
 sys.setrecursionlimit(10000)  # 재귀 깊이 설정
@@ -11,7 +9,6 @@ def dfs(node, visited, graph):
     for neighbor in graph[node]:
         if not visited[neighbor]:
             dfs(neighbor, visited, graph)
-
 # 입력
 n, m = map(int, input().split())
 graph = [[] for _ in range(n + 1)]
