@@ -1,0 +1,71 @@
+
+1. 주제: 대학 상세 페이지에서 최종 등록률 원형 차트(원그래프)로 구현
+
+2. 기술 스택 및 구성
+- 프론트엔드: React + Vite
+- 백엔드 API: 공공데이터포털 StudentService
+- XML 파싱: fast-xml-parser 사용
+- 차트 시각화: react-chartjs-2 (Chart.js 기반)
+
+3. Vite 프록시 설정 예시 (vite.config.js)
+-----------------------------------------
+server: {
+  proxy: {
+    '/api/student': {
+      target: 'http://openapi.academyinfo.go.kr',
+      changeOrigin: true,
+      rewrite: path => path.replace(/^\/api\/student/, '/openapi/service/rest/StudentService'),
+    }
+  }
+}
+
+4. API 호출 예시 (최종등록률)
+------------------------------
+axios.get('/api/student/getComparisonEntranceModelLastRegistrationRatio', {
+  params: {
+    serviceKey: '디코딩된 인증키',
+    svyYr: 2023,
+    schlId: '대학 고유코드',
+    pageNo: 1,
+    numOfRows: 10,
+  },
+  responseType: 'text',
+  headers: { Accept: 'application/xml' },
+})
+
+5. XML → JSON 변환 예시
+-------------------------
+const parser = new XMLParser({
+  ignoreAttributes: false,
+  attributeNamePrefix: '',
+});
+const jsonData = parser.parse(response.data);
+
+6. 원형 차트 구성 데이터 가공 예시
+----------------------------------
+const chartData = {
+  labels: ['최종 등록자 수', '등록 포기자 수'],
+  datasets: [{
+    data: [등록자수, 포기자수],
+    backgroundColor: [...],
+  }]
+};
+
+7. react-chartjs-2를 활용한 원형 그래프 출력
+---------------------------------------------
+import { Pie } from 'react-chartjs-2';
+
+<Pie data={chartData} />
+
+8. 관련 탭 구성
+-----------------
+- 학교소식(news): 최종 등록률 포함
+- 리뷰(review): 졸업생 리뷰 작성
+- 등록금(tuition), 장학금(scholarship): 연도별 그래프 제공
+
+9. 후속 작업 제안
+------------------
+- 뉴스 탭에 최종등록률 원형 차트 삽입
+- 리뷰 작성 폼 개발 및 POST 처리
+- 등록금 & 장학금 그래프 동시 시각화
+
