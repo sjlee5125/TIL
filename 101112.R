@@ -1,4 +1,4 @@
-setwd("C:/r_workdata")  # 원하는 폴더 경로로 바꾸기
+setwd("C:/r_workdata") # 원하는 폴더 경로로 바꾸기
 Sys.setlocale("LC_ALL","")
 
 library(lubridate)
@@ -45,7 +45,6 @@ library(googleVis)
 
 Fruits
 #appregate(계산될컬럼~기준될컬럼,데이터,함수):데이터프레임 상대로 주어진함수값구하기
-#
 #년도별로 판매된 수량의 합계
 #과일별로 가장많이 판매된 수량
 appregate(Sales~Fruit, Fruits,max)
