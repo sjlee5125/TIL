@@ -1,0 +1,56 @@
+# 대학 상세 페이지 구성
+
+## 1. 개요
+- React 기반 UI
+- 대학 상세 페이지에서 **입학전형 등록률, 재학생 충원율, 휴학생 비율**을 **원형 차트**로 시각화
+- 하단 6개 박스 중 2개에는 **막대 그래프**로 데이터를 시각화
+
+---
+
+## 2. 주요 컴포넌트
+### 2.1 Header.jsx
+- 상단 고정 헤더
+- 대학 이름, 로고 등 표시
+
+### 2.2 UniversityDetail.jsx
+- 메인 컴포넌트
+- API 요청 후 XML을 fast-xml-parser로 JSON 변환하여 처리
+
+---
+
+## 3. 시각화 구조
+
+### 3.1 오른쪽 박스 - 원형 차트 (세로 3등분)
+- 입학전형 최종 등록률
+- 재학생 충원율
+- 휴학생 비율
+- Chart.js의 `Pie` 컴포넌트 사용
+- `div` 크기 고정 대신 **비율 기반 스타일링 적용**
+
+### 3.2 하단 6개 박스 중 2개 - 막대 그래프
+- **정원내 신입생 경쟁률** (`getRegionalInsideFixedNumberFreshmanCompetitionRate`)
+- **졸업생 진학/취업 현황** (`getRegionalGraduateEnterFrndJobCrntSt`)
+- 하나는 정상 표시, 하나는 데이터 없음 또는 오류 처리
+
+---
+
+## 4. API 구성
+- Fast-XML-Parser로 XML → JSON 파싱
+- Vite 프록시: `/api/student`, `/api/finances` 분리 적용
+- axios 요청 시 `params`에 `serviceKey`, `schlId`, `svyYr`, `pageNo`, `numOfRows` 전달
+
+---
+
+## 5. UI 적용 상세
+- 기존 통계 박스 레이아웃 유지
+- 원형 차트는 `기본정보` 박스 내부에 삽입
+- 반응형 적용은 `flex-col` 및 `h-1/3` 등 Tailwind 비율 기반으로 처리
+
+---
+
+## 6. 특이사항 및 이슈
+- 일부 API에서 데이터가 없을 경우 `"데이터 없음"` 처리
+- 차트 높이 비율 지정 시 고정값 지양, 박스 크기에 맞춰 자동 조정
+- 헤더는 별도 컴포넌트로 구성되어 전체 레이아웃 영향 없음
+
+---
