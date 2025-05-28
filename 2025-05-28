@@ -1,0 +1,58 @@
+# 📅 2025년 5월 28일 작업 정리
+
+## 🧠 R 프로그래밍: KoNLP 사용 및 텍스트 처리
+
+### 📌 1. KoNLP 패키지 사용 중 문제 발생
+- 명사 추출 시 전체 문장을 그대로 반환함:
+  ```r
+  extractNoun("BTS는 유엔에서 연설했습니다.")
+  ```
+- ⚠️ 경고 메시지:
+  ```
+  can't processing 'BTS는 유엔에서 연설했습니다.'
+  ```
+
+### 📌 2. Java 환경 확인
+- Java 버전:
+  ```
+  openjdk version "1.8.0_452"
+  OpenJDK Runtime Environment (Temurin)
+  ```
+
+### 📌 3. 텍스트 전처리 및 저장 코드
+```r
+d3 = unlist(d2)
+d3 = Filter(function(x){nchar(x) <= 7}, d3)
+write(unlist(d3), "BTS_kor.txt")
+```
+- ✅ 실행 정상
+
+---
+
+## ⚙️ 문제 원인 추정
+
+- Java 버전 호환성 문제: KoNLP는 OpenJDK보다 Oracle JDK 1.8 권장
+- 외래어(BTS) 등으로 인해 형태소 분석 실패 가능성
+- 사전 로딩 문제: `useSejongDic()` 제대로 적용되지 않았을 수 있음
+
+---
+
+## 📦 패키지 설치 명령
+```r
+install.packages(
+  c('string', 'hash', 'tau', 'Sejong', 'RSQLite', 'devtools'),
+  type = 'binary',
+  lib = "C:/R"
+)
+```
+- ⚠️ 주의: `'string'` → `'stringr'` 또는 `'stringi'`의 오타일 수 있음
+
+---
+
+## 🛠 환경 설정 코드
+```r
+Sys.getenv("HOME")
+.libPaths("C:/R")
+setwd("c:/r_workdata")
+Sys.setlocale("LC_ALL", "korean")
+```
