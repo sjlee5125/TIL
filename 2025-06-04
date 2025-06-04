@@ -1,0 +1,76 @@
+# 제주도 여행 텍스트 데이터 분석 및 시각화
+
+# 환경 설정
+Sys.getenv("HOME")
+.libPaths()
+.libPaths("C:/R")
+setwd("c:/r_workdata")
+Sys.setlocale("LC_ALL", "korean")
+
+# 라이브러리 설치 및 로딩
+install.packages("stringr", lib = "C:/R")
+
+library(plotrix, lib.loc = "C:/R")
+library(lubridate, lib.loc = "C:/R")
+library(dplyr, lib.loc = "C:/R")
+library(ggplot2, lib.loc = "C:/R")
+library(googleVis, lib.loc = "C:/R")
+library(plyr, lib.loc = "C:/R")
+library(wordcloud, lib.loc = "C:/R")
+library(RColorBrewer, lib.loc = "C:/R")
+library(KoNLP, lib.loc = "C:/R")
+library(gridExtra, lib.loc = "C:/R")
+library(stringr, lib.loc = "C:/R")
+
+# 사용자 사전 등록
+buildDictionary(user_dic = data.frame(readLines("제주도여행지.txt"), "ncn"))
+
+# 텍스트 불러오기 및 명사 추출
+t1 = readLines("jeju.txt")
+p1 = sapply(t1, extractNoun, USE.NAMES = FALSE)
+c1 = unlist(p1)
+
+# 특수문자 및 공백 제거
+p1 = str_replace_all(c1, "[^[:alpha:]]", "")
+p1 = gsub(" ", "", p1)
+
+# 불용어 제거
+t1 = readLines("제주도여행코스gsub.txt")
+for (i in 1:length(t1)) {
+  p1 = gsub((t1[i]), "", p1)
+}
+
+# 2자 이상 단어만 필터링
+p1 = Filter(function(x) { nchar(x) >= 2 }, p1)
+
+# 결과 저장 및 읽기
+write(unlist(p1), "jeju_2.txt")
+p2 = read.table("jeju_2.txt")
+
+# 단어 빈도 테이블 생성
+wc = table(p2)
+
+# 워드클라우드 시각화
+pal = brewer.pal(9, "Set3")
+wordcloud(
+  names(wc), freq = wc,
+  scale = c(5, 1), rot.per = 0.25, min.freq = 2,
+  random.order = TRUE, random.color = FALSE,
+  colors = pal
+)
+
+# 상위 10개 단어 추출 및 시각화
+top10 = head(sort(wc, decreasing = TRUE), 10)
+
+# 워드클라우드2
+install.packages("wordcloud2", lib = "C:/R")
+library(wordcloud2, lib.loc = "C:/R")
+wordcloud2(top10, color = "random-light")
+
+# 파이 차트 시각화
+pct = round(top10 / sum(top10) * 100, 1)
+lab = paste(names(top10), '\n', pct, '%')
+pie3D(top10, main = "제주도여행코스 top10", col = rainbow(10), labelcex = 1, labelcol = 'blue', labels = lab, explode = 0.2)
+
+# 막대 그래프 시각화
+bp = barplot(top10, main = "제주도여행코스 top10", col = rainbow(10), cex.names = 0.7, las = 1, ylim = c(0, 25))
