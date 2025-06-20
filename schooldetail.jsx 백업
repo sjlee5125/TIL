@@ -1,0 +1,298 @@
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { Bar, Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  BarElement,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend
+} from 'chart.js';
+import './SchoolDetail.css';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
+
+const tabNames = {
+  news: '학교정보',
+  review: '졸업생 리뷰',
+  tuition: '등록금',
+  scholarship: '장학금'
+};
+
+const colors = [
+  "#4caf50", "#2196f3", "#f44336", "#ff9800", "#9e9e9e", "#ab47bc", "#00897b",
+  "#ffd600", "#6d4c41", "#0288d1", "#f06292", "#bdbdbd"
+];
+
+// 유사 키워드(묶고 싶은 전형명) 리스트
+const groupKeywords = [
+  "수시", "정시", "특기자", "기타", "정원외", "내신", "일반", "면접", "고른기회"
+];
+
+// 라벨을 대표 키워드로 그룹핑 (포함된 첫 번째 키워드로)
+function groupLabel(label, keywords = groupKeywords) {
+  for (let keyword of keywords) {
+    if (label.includes(keyword)) {
+      return keyword;
+    }
+  }
+  // 없으면 원본 반환
+  return label;
+}
+
+// 파이차트 항목 그룹핑+합치기
+function mergePieData(labels, values, maxCount = 5, keywords = groupKeywords) {
+  // 1. 그룹핑
+  const grouped = {};
+  labels.forEach((label, idx) => {
+    const gLabel = groupLabel(label, keywords);
+    grouped[gLabel] = (grouped[gLabel] || 0) + (Number(values[idx]) || 0);
+  });
+
+  // 2. value 내림차순 정렬
+  const sorted = Object.entries(grouped).sort((a, b) => b[1] - a[1]);
+
+  let resultLabels, resultValues;
+  if (sorted.length <= maxCount) {
+    // 5개 이하면 그대로
+    resultLabels = sorted.map(x => x[0]);
+    resultValues = sorted.map(x => x[1]);
+  } else {
+    // 6개 이상: 상위 4개, 나머지는 '기타'로 합침
+    const main = sorted.slice(0, maxCount - 1);
+    const etc = sorted.slice(maxCount - 1);
+    const etcSum = etc.reduce((acc, cur) => acc + cur[1], 0);
+    resultLabels = main.map(x => x[0]);
+    resultValues = main.map(x => x[1]);
+    resultLabels.push('기타');
+    resultValues.push(etcSum);
+  }
+
+  const total = resultValues.reduce((acc, v) => acc + v, 0);
+  const resultPercents = resultValues.map(v => total ? ((v / total) * 100).toFixed(1) : "0.0");
+  return { labels: resultLabels, values: resultValues, percents: resultPercents };
+}
+
+const SchoolDetail = () => {
+  const { schoolId } = useParams();
+  const [school, setSchool] = useState(null);
+  const [tuition, setTuition] = useState({});
+  const [scholarship, setScholarship] = useState({});
+  const [statistics, setStatistics] = useState([]);
+  const [admissionPie, setAdmissionPie] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [reviewInput, setReviewInput] = useState('');
+  const [tab, setTab] = useState('news');
+
+  useEffect(() => {
+    if (!schoolId) return;
+    axios.get(`/api/schoolinfo/${schoolId}`).then(res => setSchool(res.data));
+    axios.get(`/api/tuition/${schoolId}`).then(res => {
+      const map = {};
+      res.data.forEach(row => map[row.year] = row.totalAmount);
+      setTuition(map);
+    });
+    axios.get(`/api/scholarship/${schoolId}`).then(res => {
+      const map = {};
+      res.data.forEach(row => map[row.year] = row.amount);
+      setScholarship(map);
+    });
+    axios.get(`/api/statistics/${schoolId}`).then(res => setStatistics(res.data));
+    axios.get(`/api/statistics/admission-pie/${schoolId}`).then(res => setAdmissionPie(res.data));
+    axios.get(`/api/review/${schoolId}`).then(res => setReviews(res.data)).catch(() => {});
+  }, [schoolId]);
+
+  if (!school) return <div>학교 정보를 불러오는 중...</div>;
+
+  // 통계 데이터를 연도별 그룹으로 정리
+  const groupStatsByType = (type) => {
+    const map = {};
+    statistics
+      .filter(stat => stat.type === type)
+      .forEach(stat => {
+        if (stat.year >= 2022 && stat.year <= 2024) {
+          map[stat.year] = stat.value;
+        }
+      });
+    return {
+      label: type,
+      years: Object.keys(map),
+      values: Object.values(map)
+    };
+  };
+
+  // 하단 통계 항목 6개
+  const statTypes = [
+    '재학생충원율',
+    '휴학생비율',
+    '졸업생취업률',
+    '신입생경쟁률',
+    '신입생충원현황',
+    '외국인학생현황'
+  ];
+  const statGroups = statTypes.map(type => groupStatsByType(type));
+
+  const renderBarChart = (title, dataMap) => {
+    const labels = Object.keys(dataMap);
+    const values = Object.values(dataMap);
+    return (
+      <div style={{ backgroundColor: "#f8f8f8", borderRadius: "20px", padding: "20px", marginBottom: "20px" }}>
+        <h3>{title}</h3>
+        <Bar data={{
+          labels,
+          datasets: [{ label: title, data: values, backgroundColor: '#4CAF50' }]
+        }} options={{ responsive: true, scales: { y: { beginAtZero: true } } }} />
+      </div>
+    );
+  };
+
+  const renderPieChart = () => {
+    if (!admissionPie || !admissionPie.labels || !admissionPie.values) return <p>데이터 없음</p>;
+    // 5개까지 표시, 6개이상은 유사명 그룹화
+    const { labels, values, percents } = mergePieData(admissionPie.labels, admissionPie.values, 5, groupKeywords);
+
+    return (
+      <div style={{ width: '340px', margin: "0 auto 28px auto" }}>
+        <div style={{ fontWeight: "bold", fontSize: "16px", margin: "10px 0", color: "#333", textAlign: "center" }}>
+          입학전형 등록률
+        </div>
+        <Pie
+          data={{
+            labels,
+            datasets: [{
+              data: values,
+              backgroundColor: labels.map((_, i) => colors[i % colors.length])
+            }]
+          }}
+          options={{
+            responsive: true,
+            plugins: { legend: { display: false } }
+          }}
+        />
+        <div style={{
+          marginTop: "18px", textAlign: "center", display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px"
+        }}>
+          {labels.map((label, idx) => (
+            <span key={label} style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              minWidth: 90, fontSize: "15px", color: "#333"
+            }}>
+              <span style={{
+                display: "inline-block", width: 18, height: 18,
+                borderRadius: "4px",
+                background: colors[idx % colors.length],
+                border: "1px solid #bbb"
+              }} />
+              {label} <span style={{ marginLeft: 2, color: "#666" }}>({percents[idx]}%)</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderReviewTab = () => (
+    <div className="school-info-container review-box">
+      <h3>졸업생 리뷰 작성</h3>
+      <form onSubmit={e => {
+        e.preventDefault();
+        if (!reviewInput.trim()) return;
+        axios.post(`/api/review/${schoolId}`, { content: reviewInput })
+          .then(() => {
+            setReviews([{ content: reviewInput, date: new Date().toISOString() }, ...reviews]);
+            setReviewInput('');
+          });
+      }}>
+        <input value={reviewInput} onChange={e => setReviewInput(e.target.value)} maxLength={300} />
+        <button type="submit">등록</button>
+      </form>
+      <h4>리뷰 목록</h4>
+      <ul>
+        {reviews.length === 0 && <li>리뷰 없음</li>}
+        {reviews.map((r, i) => (
+          <li key={i}><div>{r.content}</div><div style={{ fontSize: 12 }}>{new Date(r.date).toLocaleString()}</div></li>
+        ))}
+      </ul>
+    </div>
+  );
+
+  return (
+    <div className="school-detail-root">
+      <div className="school-detail-center">
+        <div className="tab-row">
+          {Object.entries(tabNames).map(([key, label]) => (
+            <span key={key}
+              className={tab === key ? "tab-selected" : ""}
+              onClick={() => setTab(key)}>{label}</span>
+          ))}
+        </div>
+
+        {tab === 'news' && (
+          <div className="school-info-container">
+            <img
+              className="school-img"
+              src={school.imageUrl}
+              alt={`${school.schlNm} 로고`}
+            />
+            <div className="school-text">
+              <ul>
+                <li><strong>설립유형:</strong> {school.schlEstbDivNm}</li>
+                <li><strong>학교유형:</strong> {school.schlDivNm || school.schlKndNm}</li>
+                <li><strong>설립연도:</strong> {school.schlEstbDt}</li>
+                <li><strong>주소:</strong> {school.postNoAdrs}</li>
+                <li><strong>우편번호:</strong> {school.post_no || school.postNo}</li>
+                <li><strong>전화번호:</strong> {school.schlRepTpNoCtnt}</li>
+                <li><strong>팩스번호:</strong> {school.schlRepFxNoCtnt}</li>
+                <li>
+                  <strong>홈페이지:</strong> <a href={school.schlUrlAdrs} target="_blank" rel="noreferrer">{school.schlUrlAdrs}</a>
+                </li>
+              </ul>
+            </div>
+            <div className="chart-column">{renderPieChart()}</div>
+          </div>
+        )}
+
+        {tab === 'tuition' && renderBarChart('연도별 등록금', tuition)}
+        {tab === 'scholarship' && renderBarChart('연도별 장학금 수혜', scholarship)}
+        {tab === 'review' && renderReviewTab()}
+
+        {/* 하단 통계 6개 */}
+        <div className="stat-grid">
+          {statGroups.map((stat, idx) => (
+            <div className="stat-box" key={idx}>
+              {stat && stat.values?.length > 0 ? (
+                <>
+                  <h4>{stat.label}</h4>
+                  <Bar  
+                    data={{
+                      labels: stat.years,
+                      datasets: [{
+                        label: stat.label,
+                        data: stat.values,
+                        backgroundColor: '#4CAF50'
+                      }]
+                    }}
+                    options={{
+                      responsive: true,
+                      scales: { y: { beginAtZero: true } }
+                    }}
+                  />
+                </>
+              ) : (
+                <>
+                  <h4>{stat.label}</h4>
+                  <p style={{ textAlign: 'center', color: '#888' }}>데이터 준비 중입니다.</p>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SchoolDetail;
