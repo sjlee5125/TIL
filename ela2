@@ -1,0 +1,112 @@
+//인덱스
+PUT snack
+{
+    "settings": {
+        "index.number_of_shards": 2, //몇개로 나눠서 저장할지(기본값 1)
+        "number_of_replicas": 2 //shard의 복제본 개수(기본값 1)
+    },
+    "mappings":{
+        "properties":{
+            "name":{"type":"text"},
+            "price":{"type":"integer"}
+        }
+    }
+}
+//인덱스 - 날짜
+PUT snack2
+{"mappings":{
+        "properties":{
+            "name":{"type":"text"},
+            "exp":{"type":"date",
+                    "format":"yyyy-MM-dd HH시"}
+        }
+    }
+}
+ 
+PUT snack2/_doc/1
+{"name":"촉촉한 초코칩",
+"exp":"2026-02-09 15시"}
+PUT snack2/_doc/2
+{"name":"안 촉촉한 초코칩",
+"exp":"2026-02-09"}  // 에러
+GET snack2/_search
+
+PUT spot
+{"mappings":{
+        "properties":{
+            "name":{"type":"text"},
+            "location":{"type":"geo_point"}
+        }
+    }
+}
+ 
+PUT spot/_doc/1
+{
+    "name":"광화문",
+    "location":{"lat":37.574187,"lon":126.976882 }
+}
+ 
+GET spot/_search
+
+PUT server_info
+{
+    "mappings":{
+        "properties": {
+            "name":{"type":"text"},
+            "ipAddr":{"type":"ip"}
+        }
+    }
+}
+
+
+
+PUT server_info/_doc/1
+{"name":"DB 서버",
+"ipAddr":"192.168.0.123"}
+PUT server_info/_doc/2
+{
+    "name":"Live Server WAS",
+    "ipAddr":"192168023"
+}
+
+PUT events
+{
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text"
+      },
+      "event_period": {
+        "type": "date_range"
+      }
+    }
+  }
+}
+ 
+POST events/_doc
+{
+  "title": "겨울 행사",
+  "event_period": {
+    "gte": "2026-02-01",
+    "lte": "2026-02-10"
+  }
+}
+ 
+GET events/_search
+{
+  "query": {
+    "range": {
+      "event_period": {
+        "gte": "2026-02-05",
+        "lte": "2026-02-05"
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
