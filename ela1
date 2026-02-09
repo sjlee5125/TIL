@@ -1,0 +1,69 @@
+PUT book 
+{"mappings":{
+    "properties": {
+        "title" :{"type":"text"},
+        "author":{"type":"keyword"},
+        "price":{"type":"integer"}
+    }
+}}
+
+GET book
+
+
+
+
+#put 인덱스/_doc/_id값
+PUT book/_doc/1
+{"title":"엘라스틱1",
+"author":"김스캇",
+"price":10000}
+
+PUT book/_doc/2
+{"title":"엘라스틱2",
+"author":"김스캇",
+"price":15000}
+
+
+#전체조회
+GET book/_search
+#아이디가 1인 doc조회
+GET book/_doc/1
+#조건검색 : 10000이라는 데이터가 들어있는 doc조회
+GET book/_search?q=10000
+# 특정필드 조건검색 : author이 김스캇인 doc조회
+GET book/_search?q=author:김스캇
+#id자동 생성
+POST  book/_doc
+{"title":"엘라스틱3",
+"author":"김제임스",
+"price":"20000"
+}
+#부분수정
+POST book/_update/1
+{
+    "doc":{"price":20000}
+}
+GET book/_doc/1
+#전체 교체
+POST book/_update/Dd2SQJwByWH9hzOEfaiC
+{
+    "doc":{"price":20000}
+}
+
+GET book/_doc/Dd2SQJwByWH9hzOEfaiC
+
+#doc삭제
+DELETE book/_doc/Dd2SQJwByWH9hzOEfaiC
+GET book/_search
+
+# 인덱스
+DELETE book
+
+#인덱스 자동생성
+PUT coffee/_doc/1
+{
+    "title":"아메리카노",
+    "price":4500
+}
+GET coffee/_search
+GET coffee
