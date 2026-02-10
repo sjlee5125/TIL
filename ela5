@@ -1,0 +1,220 @@
+POST /snack/_search
+{
+    "query": {
+        "range": {
+          "price": {
+            "gte": 3300
+            
+          }
+        }
+    }
+}
+
+
+GET snack/_search
+{
+    "query": {
+        "bool": {"should":[
+            {"match":{"name":"포도"}},
+            {"match":{"name":"딸기"}
+            }
+        ]}
+    }
+}
+
+
+GET snack/_search
+{
+    "query": {
+        "bool": {
+            "must":{"match":{"name":"딸기"}},
+            "must_not":{"match":{"name":"레몬"}}
+        }
+    }
+}
+
+
+GET snack/_search
+{
+    "query": {
+        "wildcard": {
+          "name": {
+            "value": "*링"
+          }
+        }
+    }
+}
+
+#인덱스/_count
+GET snack/_count
+{
+    "query": {
+        "match": {
+          "name": "딸기"
+        }
+    }
+}
+
+#query 유효성 검사(쿼리가 올바르게 작성되었는지 확인)
+GET snack/_validate/query
+{
+    "query": {
+        "price":"500"
+    }
+}
+
+
+#합계
+GET snack/_search
+{
+    "aggs": {
+      "priceSum": {
+        "sum": {
+            "field": "price"
+        }
+      }
+    }
+}
+
+
+
+GET snack/_search
+{
+    "query": {
+        "maker":"오리온"
+    },
+    "aggs":{
+        "orionPriceSum":{
+            "sum":{
+                "script": {
+                    "source": "doc.price.value/params.chunwon",
+                    "paramas":{"chunwon":1000}
+                }
+            }
+        }
+    }
+}
+
+POST /snack/_search
+{
+    "query": {
+        "match": {
+          "maker": "오리온"
+        }
+    },
+    "aggs": {
+      "orionPriceSum": {
+        "sum": {
+           "script": {
+            "source": "doc['price'].value >= 5000 ? doc['price'].value : 0"
+           }
+        }
+      }
+    }
+}
+
+GET /snack/_search
+{
+    "aggs": {
+      "weightAvg": {
+        "avg": {"field":"weight"}
+      }
+    }
+}
+
+
+
+GET snack/_search
+{
+    "aggs": {
+      "priceMax": {
+        "max": {"field": "price"}
+      },
+       "priceMin": {
+        "min": {"field": "price"}
+      },
+       "priceCnt": {
+        "value_count": {"field": "price"}
+      },
+       "priceAvg": {
+        "avg": {"field": "price"}
+      }
+    }
+}
+
+
+GET snack/_search
+{
+    "size": 0,
+    "aggs": {
+      "p_rank": {
+        "percentile_ranks": {
+            "field": "price",
+            "values": [5300,500]
+        }
+      }
+    }
+}
+
+ 
+GET snack/_search
+{"size": 0,
+    "aggs": {
+  "priceRange": {
+    "range": {
+        "field": "price",
+        "ranges": [
+          {"from": 3000, "to": 5000},
+          {"to": 5000}
+         
+        ]
+ 
+    }
+  }
+}}
+ 
+
+
+
+PUT products
+{
+  "mappings": {
+    "properties": {
+      "name": { "type": "text" },
+      "brand": { "type": "keyword" },
+      "category": { "type": "keyword" },
+      "price": { "type": "double" },
+      "quantity": { "type": "integer" }
+    }
+  }
+}
+ 
+POST products/_doc/1
+{"name":"초콜릿","brand":"로떼","category":"과자","price":1500,"quantity":10}
+POST products/_doc/2
+{"name":"사탕","brand":"크라운","category":"과자","price":1000,"quantity":20}
+POST products/_doc/3
+{"name":"쿠키","brand":"오리온","category":"과자","price":2000,"quantity":5}
+POST products/_doc/4
+{"name":"음료수","brand":"오리온","category":"음료","price":3000,"quantity":8}
+POST products/_doc/5
+{"name":"주스","brand":"로떼","category":"음료","price":2500,"quantity":12}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
