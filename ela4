@@ -1,0 +1,324 @@
+GET _cat/indices
+
+
+PUT snack
+{"mappings":{
+        "properties": {
+            "name":{"type":"text"},
+            "maker":{"type":"keyword"},
+            "price":{"type":"integer"},
+            "weight":{"type":"double"}
+        }
+    }
+
+}
+
+PUT snack/_doc/1
+{
+  "name": "새우깡", "maker": "농심", "price": 3000, "weight": 200
+}
+PUT snack/_doc/2
+{
+  "name": "노래방새우깡", "maker": "농심", "price": 5000, "weight": 1000
+}
+PUT snack/_doc/3
+{
+  "name": "양파링", "maker": "농심", "price": 3300, "weight": 220
+}
+PUT snack/_doc/4
+{
+  "name": "맛동산", "maker": "해태", "price": 2300, "weight": 150
+}
+PUT snack/_doc/5
+{
+  "name": "포카칩", "maker": "오리온", "price": 5300, "weight": 100
+}
+PUT snack/_doc/6
+{
+  "name": "썬칩", "maker": "오리온", "price": 3000, "weight": 200
+}
+
+POST snack/_doc
+{
+  "name": "초코파이", "maker": "오리온", "price": 5000, "weight": 700
+}
+POST snack/_doc
+{
+  "name": "초코파이", "maker": "롯데", "price": 4500, "weight": 750
+}
+POST snack/_doc
+{
+  "name": "새콤달콤 딸기", "maker": "크라운", "price": 500, "weight": 50
+}
+POST snack/_doc
+{
+  "name": "새콤달콤 포도", "maker": "크라운", "price": 500, "weight": 50
+}
+
+
+
+#URI방식- 파라미터
+#q: 검색어, sort: 정렬
+#필드 상관없이 값이 500인 문서
+GET snack/_search?q=500
+#price가 500인 문서들을 이름순으로 정렬
+GET snack/_search?q=price:500&sort=price
+#price기준 정렬
+GET snack/_search?sort=price
+#price 기준 역순 정ㄹ려
+GET snack/_search?sort=price:dsc
+#text타입의 필드 -> 정렬, 집계 불가능
+GET snack/_search?sort=name
+
+#json형태로 조건 전달
+#필드 상관없이 값이 500을 가지고있는 doc
+GET snack/_search
+{
+    "query": {
+        "query_string": {
+          "query":500
+          
+          }
+    }
+}
+
+#match 일치
+GET snack/_search
+{
+    "query": {
+        "match": {
+          "maker": "농심"
+        }
+    }
+}
+
+
+
+GET snack/_search
+{
+    "query": {
+        "match_all":{}
+    },
+    "size":2,
+    "from":3
+}
+
+get snack/_search
+{
+    "query": {
+        "match_all": {}
+    },
+    "sort":[
+        {"maker":{}},
+        {"weight":{"order":"desc"}}
+    ]
+}
+
+
+get snack/_search
+{
+    "query": {
+        "match_all": {}
+    },
+    "_source": ["name","price"]
+}
+
+
+get snack/_search
+{
+    "query": {
+        "match": {
+            "name":"노래방새우깡"
+        }
+    },
+    "_source": ["name","price"]
+}
+
+
+GET /snack/_search
+{
+    "query": {
+        "match": {
+          "name": {
+            "query":"새콤달콤 딸기 새우깡 양파링",
+            "minimum_should_match": "2"
+          }
+        }
+    }
+}
+
+
+
+GET /snack/_search
+{
+    "query": {
+        "match": {
+          "name": {
+            "query":"새콤달콤 딸기 새우깡 양파링",
+            "minimum_should_match": "50%"
+          }
+        }
+    }
+}
+#지정한 필드가 해당 값을 가지고 있는 doc
+GET /snack/_search
+{
+    "query": {
+        "multi_match": {
+          "query": "200",
+          "fields": ["price","weight"]
+        }
+    }
+}
+
+
+
+PUT test_index
+{
+  "mappings": {
+    "properties": {
+      "txt": {
+        "type": "text"
+      }
+    }
+  }
+}
+ 
+# POST 인덱스/_doc : ID미지정(자동 생성)해서 새로운 doc 생성
+POST test_index/_doc
+{"txt":"I am a boy"}
+
+
+
+GET test_index/_search
+
+GET test_index/_search
+{
+    "query": {
+        "match": {
+          "txt": "I am"
+        }
+    }
+}
+
+
+
+
+
+
+
+
+# 완전히 일치하는 경우
+GET test_index/_search
+{
+    "query": {
+        "term": {
+          "txt":"I am" #i,am 토큰과 일치하는 doc 0개
+        }
+    }
+}
+
+
+
+
+
+# txt1 : 분석기 적용(토큰으로 나눠서 저장)
+# txt2 : 통으로 저장
+PUT keyword_test_index
+{
+  "mappings": {
+    "properties": {
+      "txt1": {
+        "type": "text"
+      },
+      "txt2": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+put keyword_test_index/_doc/1
+{
+  "txt1":"I am a boy",
+  "txt2": "I am a boy"
+}
+ 
+POST keyword_test_index/_search
+{
+  "query": {
+    "match": {
+      "txt1": "I am"
+    }
+  }
+}
+POST keyword_test_index/_search
+{
+  "query": {
+    "match": {
+      "txt2": "I am a boy"
+    }
+  }
+}
+
+
+# term : 정확히 일치하는 값을 찾는다
+# 토큰으로 나눠서 저장된 문자열과 일치X
+# text필드는 term사용X
+POST keyword_test_index/_search
+{
+  "query": {
+    "term": {
+      "txt1": "I am a boy"
+    }
+  }
+}
+ 
+POST keyword_test_index/_search
+{
+  "query": {
+    "term": {
+      "txt2": "I am a boy"
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
