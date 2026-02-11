@@ -1,0 +1,187 @@
+#nori분석기
+# 한글-> 복합 명사가 많음
+#어떻게 분해할지 제어
+#none: 복합어를 분해하지 않고 원형 그대로 유지
+#discard: 복합어를 버리고 분해된 단어만 사용
+#mixed : 원형 + 분해된 단어 모두 유지
+
+
+PUT nori_example
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "nori_none": {
+          "type": "custom",
+          "tokenizer": "nori_none_tokenizer"
+        },
+        "nori_discard": {
+          "type": "custom",
+          "tokenizer": "nori_discard_tokenizer"
+        },
+        "nori_mixed": {
+          "type": "custom",
+          "tokenizer": "nori_mixed_tokenizer"
+        }
+      },
+      "tokenizer": {
+        "nori_none_tokenizer": {
+          "type": "nori_tokenizer",
+          "decompound_mode": "none"
+        },
+        "nori_discard_tokenizer": {
+          "type": "nori_tokenizer",
+          "decompound_mode": "discard"
+        },
+        "nori_mixed_tokenizer": {
+          "type": "nori_tokenizer",
+          "decompound_mode": "mixed"
+        }
+      }
+    }
+  }
+}
+ 
+ 
+ 
+# none
+GET nori_example/_analyze
+{
+  "analyzer": "nori_none",
+  "text": "대한민국서울시청"
+}
+ 
+# discard
+GET nori_example/_analyze
+{
+  "analyzer": "nori_discard",
+  "text": "대한민국서울시청"
+}
+ 
+# mixed
+GET nori_example/_analyze
+{
+  "analyzer": "nori_mixed",
+  "text": "대한민국서울시청"
+}
+
+
+
+DELETE nori_example
+PUT nori_example
+{
+  "settings": {
+    "analysis": {
+      "tokenizer": {
+        "nori_tokenizer_custom": {
+          "type": "nori_tokenizer",
+          "decompound_mode": "mixed"
+        }
+      },
+      "analyzer": {
+        "nori_analyzer": {
+          "type": "custom",
+          "tokenizer": "nori_tokenizer_custom",
+          "filter": [
+            "lowercase", "stop"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "content":{
+        "type": "text",
+        "analyzer": "nori_analyzer"
+      }
+    }
+  }
+}
+ 
+POST nori_example/_analyze
+{
+  "analyzer": "nori_analyzer",
+  "text": "대한민국서울시청에서 열린 문화 행사입니다."
+}
+
+DELETE nori_example
+PUT nori_example
+{
+  "settings": {
+    "analysis": {
+      "tokenizer": {
+        "nori_tokenizer_custom": {
+          "type": "nori_tokenizer",
+          "decompound_mode": "mixed"
+        }
+      },
+      "filter": {
+        "korean_stop": {
+          "type": "stop",
+          "stopwords": [
+            "에서",
+            "으로",
+            "이다"
+          ]
+        }
+      },
+      "analyzer": {
+        "nori_analyzer": {
+          "type": "custom",
+          "tokenizer": "nori_tokenizer_custom",
+          "filter": [
+            "lowercase",
+            "korean_stop"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "content": {
+        "type": "text",
+        "analyzer": "nori_analyzer"
+      }
+    }
+  }
+}
+ 
+POST nori_example/_analyze
+{
+  "analyzer": "nori_analyzer",
+  "text": "대한민국서울시청에서 열린 문화 행사이다."
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
